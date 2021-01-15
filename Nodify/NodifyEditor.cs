@@ -311,6 +311,10 @@ namespace Nodify
 
         #region Dependency Properties
 
+        /// <summary>
+        /// 아래의 Dependecny Properties 를 간단히 테스트 해서 어떤 녀석들인지 파악해야함.
+        /// </summary>
+
         public static readonly DependencyProperty ConnectionsProperty = DependencyProperty.Register(nameof(Connections), typeof(IEnumerable), typeof(NodifyEditor));
         public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
