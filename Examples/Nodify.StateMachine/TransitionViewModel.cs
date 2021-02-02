@@ -1,5 +1,7 @@
 ﻿namespace Nodify.StateMachine
 {
+    // MVVM 을 구현하기 위해 ObservableObject 를 shared 단에서 구현해놓음.
+    
     public class TransitionViewModel : ObservableObject
     {
         private StateViewModel _source = default!;

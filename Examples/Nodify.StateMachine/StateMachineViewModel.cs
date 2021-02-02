@@ -16,7 +16,11 @@ namespace Nodify.StateMachine
                 Actions = new NodifyObservableCollection<BlackboardItemReferenceViewModel>(BlackboardDescriptor.GetAvailableItems<IBlackboardAction>()),
                 Conditions = new NodifyObservableCollection<BlackboardItemReferenceViewModel>(BlackboardDescriptor.GetAvailableItems<IBlackboardCondition>())
             };
-
+            // public INodifyObservableCollection<T> WhenAdded(Action<T> added)
+            // INodifyObservableCollection<T>, Action<T> 임으로 T는 WhenAdded 의부모 속성을 가지므로 파라미터 하나짜리 익명함수의 경우 해당 파라미터는 부모의 객체 타입이다.  
+            // Source 의경우는 TransitionViewModel 객체의 StateViewModel 이다.
+            // public NodifyObservableCollection<StateViewModel> Transitions { get; } = new NodifyObservableCollection<StateViewModel>();
+            // 초기화 구문 같은데...
             Transitions.WhenAdded(c => c.Source.Transitions.Add(c.Target))
             .WhenRemoved(c => c.Source.Transitions.Remove(c.Target))
             .WhenCleared(c => c.ForEach(i =>
@@ -34,8 +38,11 @@ namespace Nodify.StateMachine
                  });
 
             OnCreateDefaultKeys();
+            
+            // 여기서 노드와 arrow 가 생성됨.
             OnCreateDefaultNodes();
-
+            
+            // RequeryCommand ???
             RenameStateCommand = new RequeryCommand(() => SelectedStates[0].IsRenaming = true, () => SelectedStates.Count == 1 && SelectedStates[0].IsEditable);
             DisconnectStateCommand = new RequeryCommand<StateViewModel>(x => DisconnectState(x), x => !IsRunning && x.Transitions.Count > 0);
             DisconnectSelectionCommand = new RequeryCommand(() => SelectedStates.ForEach(x => DisconnectState(x)), () => !IsRunning && SelectedStates.Count > 0 && Transitions.Count > 0);
@@ -193,7 +200,7 @@ namespace Nodify.StateMachine
             Transitions[1].Condition!.Input[1].Type = BlackboardKeyType.String;
             Transitions[1].Condition!.Input[1].Value = currentDelayKey.Name;
 
-            Transitions.Add(new TransitionViewModel
+           /* Transitions.Add(new TransitionViewModel
             {
                 Source = States[2],
                 Target = States[3]
@@ -209,7 +216,7 @@ namespace Nodify.StateMachine
             {
                 Source = States[4],
                 Target = States[1]
-            });
+            });*/
         }
 
         protected virtual void OnCreateDefaultKeys()

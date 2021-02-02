@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Nodify
 {
+    // 확장 메소드, 첫번째 파라미터가 this 임.
     public static class FluentSyntax
     {
         public static void Then<T>(this T caller, Action<T> action)
@@ -54,4 +55,5 @@ namespace Nodify
             return collection;
         }
     }
+
 }

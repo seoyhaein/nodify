@@ -6,25 +6,25 @@
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
-                Value="DodgerBlue" />
+                Value="#FF1CE613" />
     </Style>
-
+    <!-- DodgerBlue -->
     <Style TargetType="{x:Type local:DirectionalConnection}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
-                Value="DodgerBlue" />
+                Value="#FF1CE613" />
         <Setter Property="Fill"
-                Value="DodgerBlue" />
+                Value="#FF1CE613" />
     </Style>
 
     <Style TargetType="{x:Type local:CircuitConnection}">
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
-                Value="DodgerBlue" />
+                Value="#FF1CE613" />
         <Setter Property="Fill"
-                Value="DodgerBlue" />
+                Value="#FF1CE613" />
     </Style>
 
 </ResourceDictionary>

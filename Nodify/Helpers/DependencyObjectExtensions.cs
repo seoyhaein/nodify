@@ -8,8 +8,12 @@ namespace Nodify
 {
     public static class DependencyObjectExtensions
     {
-        public static T? GetParentOfType<T>(this DependencyObject child)
-            where T : DependencyObject
+        // 확장메서드
+        // functionA(this type param) 일경우
+        // 이함수를 사용하는 코드에서 A.functionsA() 라고 사용하면
+        // functionA 에서 첫번째 입력 파라미터 type param 은 A 를 받는다. 
+
+        public static T? GetParentOfType<T>(this DependencyObject child) where T : DependencyObject
         {
             DependencyObject current = child;
 

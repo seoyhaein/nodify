@@ -19,6 +19,10 @@ namespace Nodify
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
     public class NodifyEditor : MultiSelector
     {
+        // NodifyEditor.xaml 에서
+        // <local:NodifyCanvas x:Name="PART_ItemsHost" IsItemsHost="True" />
+        // 이렇게 정의되어 있음
+        
         protected const string ElementItemsHost = "PART_ItemsHost";
 
         #region Cosmetic Dependency Properties
@@ -27,12 +31,18 @@ namespace Nodify
         public static readonly DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
         public static readonly DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Double2, OnMaximumScaleChanged, CoerceMaximumScale));
         public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register(nameof(Offset), typeof(Point), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.Point, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnOffsetChanged, OnCoerceOffset));
+        
         public static readonly DependencyProperty BringIntoViewAnimationDurationProperty = DependencyProperty.Register(nameof(BringIntoViewAnimationDuration), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.DoubleHalf));
-        public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));
+       
+        // Offset 과 관련이 있는듯!!
+        public static readonly DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False, OnDisableAutoPanningChanged));        
         public static readonly DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(10d));
         public static readonly DependencyProperty AutoPanEdgeDistanceProperty = DependencyProperty.Register(nameof(AutoPanEdgeDistance), typeof(double), typeof(NodifyEditor), new FrameworkPropertyMetadata(15d));
+        
+        // DataTemplate 타입의 ConnectionTemplateProperty 타입을 등록함. 이게 connection.xaml 로 연결되는지 살펴봐야 함. 이건 신경써서 찾아봐야함. 현재 nodifyEditor.xaml 에서 정의된 것과 어떻게 연결되는지? 실제로 연결되는지를????
         public static readonly DependencyProperty ConnectionTemplateProperty = DependencyProperty.Register(nameof(ConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
         public static readonly DependencyProperty PendingConnectionTemplateProperty = DependencyProperty.Register(nameof(PendingConnectionTemplate), typeof(DataTemplate), typeof(NodifyEditor));
+
         public static readonly DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(NodifyEditor));
 
         #region Callbacks
@@ -64,7 +74,7 @@ namespace Nodify
         {
             var editor = (NodifyEditor)d;
             editor.OffsetOverride((Point)e.NewValue);
-            editor.CoerceValue(ViewportProperty);
+            editor.CoerceValue(ViewportProperty);     // viewport
         }
 
         private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -80,7 +90,7 @@ namespace Nodify
             zoom.CoerceValue(MaxScaleProperty);
             zoom.CoerceValue(ScaleProperty);
         }
-
+        // scale 값이 0.01 보다 작을 수 없다.
         private static object CoerceMinimumScale(DependencyObject d, object value)
             => (double)value > 0 ? value : 0.01;
 
@@ -98,6 +108,9 @@ namespace Nodify
             return (double)value < min ? min : value;
         }
 
+        // DisableZooming 이 true 가 되어 있으면 현재 값을 그대로 리턴함
+        // MinSacle(0.1d) 과 MaxScale(2d) 을 이용해 그 값을 넘거가지 못하게 함. 
+        
         private static object ConstrainScaleToRange(DependencyObject d, object value)
         {
             NodifyEditor editor = (NodifyEditor)d;
@@ -242,7 +255,7 @@ namespace Nodify
         #endregion
 
         #region Readonly Dependency Properties
-
+        //scale 을 세팅해주면 여기서 변화한다. 컨스트럭터를 살펴볼것!
         protected internal static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
         public static readonly DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
 
@@ -319,8 +332,10 @@ namespace Nodify
         public static readonly DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(NodifyEditor), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         public static readonly DependencyProperty PendingConnectionProperty = DependencyProperty.Register(nameof(PendingConnection), typeof(object), typeof(NodifyEditor));
         public static readonly DependencyProperty GridCellSizeProperty = DependencyProperty.Register(nameof(GridCellSize), typeof(uint), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.UInt1, OnGridCellSizeChanged, OnCoerceGridCellSize));
+        
         public static readonly DependencyProperty DisableZoomingProperty = DependencyProperty.Register(nameof(DisableZooming), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
         public static readonly DependencyProperty DisablePanningProperty = DependencyProperty.Register(nameof(DisablePanning), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
+
         public static readonly DependencyProperty EnableRealtimeSelectionProperty = DependencyProperty.Register(nameof(EnableRealtimeSelection), typeof(bool), typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.False));
 
         /// <summary>
@@ -538,8 +553,10 @@ namespace Nodify
 
         #region Construction
 
+        // 해당 인스턴스가 생성될때 한번만 호출된다.
         static NodifyEditor()
         {
+            // https://docs.microsoft.com/ko-kr/dotnet/api/system.windows.frameworkelement.defaultstylekey?view=net-5.0
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
@@ -551,12 +568,15 @@ namespace Nodify
         /// </summary>
         public NodifyEditor()
         {
-            AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
-            AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
+            // 이벤트 핸들러를 추가하는 구문
+            // Connector 의 DisconnectEvent, PendingConnectionCompletedEvent 이벤트에 대한 처리를 추가해줌.
 
-            AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
-            AddHandler(ItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
-            AddHandler(ItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
+            AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
+            AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted)); 
+
+            AddHandler(ItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));        // 이동 시작
+            AddHandler(ItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));  // 이동 완료
+            AddHandler(ItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));              // 시작->이동중
 
             Selection = new SelectionHelper(this);
 
@@ -568,21 +588,24 @@ namespace Nodify
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
         }
-
+        // 템플릿이 적용되면 호출되는 콜백함수??
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
+            // ControlTemplate의 시각적 트리에서 'ElementItemsHost' 의 이름을 가지는 요소(DependencyObject) 를 반환한다.
             ItemsHost = GetTemplateChild(ElementItemsHost) as Panel;
         }
 
+        // MultiSelector 도 ItemsControl 에서 파생을 받았다. 여기서 item 의 각각 의 컨테이너를 아래 함수를 통해서 만들어주는데, 여기서는 사용자가 정의한 ItemContainer 로 컨테이너를 구성한다.
         protected override DependencyObject GetContainerForItemOverride()
             => new ItemContainer()
             {
                 // TODO: Make this a TransformGroup and add TranslateTransform to it
                 RenderTransform = new TranslateTransform()
             };
-
+        
+        // 위의 코드와 같이 아래 함수를 두개다 재정의하면 itemContainer 를 재정의할 수 있다. 여기서는 item 이(itemsource 에서의 item이) ItemContainer 인지를 확인해준다.
         protected override bool IsItemItsOwnContainerOverride(object item)
             => item is ItemContainer;
 
@@ -600,6 +623,10 @@ namespace Nodify
         /// </summary>
         public void ZoomOut() => ZoomAtPosition(Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine), RenderTransform.Transform(new Point(RenderSize.Width / 2, RenderSize.Height / 2)));
 
+
+        ///
+        /// StateMachine 에서는 Buttion 에 바인딩 되어 있다.
+        /// 
         /// <summary>
         /// Moves the <see cref="Viewport"/> at the specified location.
         /// </summary>
@@ -724,7 +751,8 @@ namespace Nodify
                 e.Handled = true;
             }
         }
-
+        // ConnectionCompletedCommand 에 바인딩 된 method 에 대응됨.
+        // connector PendingConnectionCompletedEvent
         private void OnConnectionCompleted(object sender, PendingConnectionEventArgs e)
         {
             if (!e.Canceled)
@@ -785,6 +813,7 @@ namespace Nodify
             // End selection if selecting
             Selection.End();
             IsPanning = false;
+
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -1066,7 +1095,11 @@ namespace Nodify
         #endregion
 
         #region Dragging
-
+        /*
+         * DragDeltaEventArgs https://docs.microsoft.com/ko-kr/dotnet/api/system.windows.controls.primitives.dragdeltaeventargs?view=net-5.0  사용자가 DragDelta 컨트롤을 마우스로 끌 때 한 번 이상 발생하는 Thumb 이벤트에 대한 정보를 제공합니다.
+         * DragCompletedEventArgs https://docs.microsoft.com/ko-kr/dotnet/api/system.windows.controls.primitives.dragcompletedeventargs?view=net-5.0  사용자가 DragCompleted 컨트롤을 마우스로 끄는 작업을 끝낼 때 발생하는 Thumb 이벤트에 대한 정보를 제공합니다.
+         * 시작시점 및 이동중
+         */
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
             // Move selection only if a selected item is being dragged
@@ -1091,7 +1124,11 @@ namespace Nodify
                 }
             }
         }
-
+      
+        ///   Draw the containers at the new position.
+        ///   ItemsHost?.InvalidateArrange();  구현해볼것!!!
+        ///   이동완료
+        ///
         private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
         {
             if (_selectedContainers.Count > 0)
@@ -1148,7 +1185,9 @@ namespace Nodify
                 }
             }
         }
-
+        
+        ///   이동시작
+        ///
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
             _dragInstigator = e.OriginalSource as ItemContainer ?? (e.OriginalSource as UIElement)?.GetParentOfType<ItemContainer>();

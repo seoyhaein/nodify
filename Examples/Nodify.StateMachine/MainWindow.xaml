@@ -12,11 +12,13 @@
         Title="State Machine Editor"
         Height="500"
         Width="930">
+    
     <Window.DataContext>
         <local:StateMachineViewModel />
     </Window.DataContext>
+    
     <!--BindingProxy 를 사용하고 있는데 일단 이해가 부족하다.-->
-        <Window.Resources>
+    <Window.Resources>
         <shared:BindingProxy x:Key="EditorProxy"
                              DataContext="{Binding}" />
         <shared:BindingProxy x:Key="BlackboardProxy"
@@ -29,8 +31,13 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
-        <nodify:NodifyEditor x:Name="Editor"
+        <!--하나씩 코드를 뜯어서 시험해보자 별도의 프로젝트를 만들어서-->
+        <!--
+            MultiSelector 자체의 MultiSelector.ItemsSource 가 있고,
+            ControlTemplate 에 넣어준 ItemsControl 있다.
+            Connections 의 경우는 ControlTemplate 에 넣어준 ItemsControl 의 ItemsSource 이다 (ItemsControl.ItemsSource).
+        -->
+            <nodify:NodifyEditor
                              ItemsSource="{Binding States}"
                              SelectedItem="{Binding SelectedState}"
                              SelectedItems="{Binding SelectedStates}"
@@ -279,13 +286,13 @@
 
                 <Button Content="{StaticResource ZoomInIcon}"
                         Command="{x:Static nodify:EditorCommands.ZoomIn}"
-                        CommandTarget="{Binding ElementName=Editor}"
+                        CommandTarget="{Binding ElementName=Connection}"
                         ToolTip="Zoom In"
                         Style="{StaticResource IconButton}" />
 
                 <Button Content="{StaticResource ZoomOutIcon}"
                         Command="{x:Static nodify:EditorCommands.ZoomOut}"
-                        CommandTarget="{Binding ElementName=Editor}"
+                        CommandTarget="{Binding ElementName=Connection}"
                         ToolTip="Zoom Out"
                         Style="{StaticResource IconButton}" />
 

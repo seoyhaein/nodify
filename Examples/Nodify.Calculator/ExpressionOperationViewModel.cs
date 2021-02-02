@@ -9,15 +9,15 @@ namespace Nodify.Calculator
         public string? Expression
         {
             get => _expression;
-            set => SetProperty(ref _expression, value)
-                .Then(GenerateInput);
-        }
+            set => SetProperty(ref _expression, value)                      // 성공하면 true 실패하면 false
+                .Then(GenerateInput);                                       // 확장메소드를 사용했음. 위의 구문이 성공하면 GenerateInput 을 수행하고 true, 실패하면 false 리턴. false 리턴하면 문제가 없나???
+        }                                                                   // set 의 경우는 리턴이 없으므로 가능한거 같은데...
 
         private void GenerateInput()
         {
             try
             {
-                var operation = SMath.CreateOperation(Expression);
+                var operation = SMath.CreateOperation(Expression);                                  // StringMath https://github.com/miroiu/string-math
                 var toRemove = Input.Where(i => !operation.Replacements.Contains(i.Title)).ToArray();
                 toRemove.ForEach(i => Input.Remove(i));
                 var left = Input.Select(s => s.Title).ToHashSet();

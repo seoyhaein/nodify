@@ -25,6 +25,8 @@ namespace Nodify
         /// </summary>
         public static readonly DependencyProperty LocationOverrideProperty = DependencyProperty.RegisterAttached("LocationOverride", typeof(Point), typeof(ItemContainer), new FrameworkPropertyMetadata(BoxValue.Point, OnLocationOverrideChanged));
 
+
+        // 위치에 대한 함수들
         public static Point GetLocationOverride(UIElement elem)
             => (Point)elem.GetValue(LocationOverrideProperty);
 

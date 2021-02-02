@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nodify.Calculator
+namespace Nodify_Tester
 {
     public enum OperationType
     {
@@ -9,14 +9,18 @@ namespace Nodify.Calculator
         Expression
     }
 
+    public interface IOperation
+    {
+        decimal Execute(params decimal[] operands);
+    }
+
     public class OperationInfoViewModel
     {
         public string? Title { get; set; }
         public OperationType Type { get; set; }
         public IOperation? Operation { get; set; }
-        public List<string?> Input { get; } = new List<string?>();  // 이것의 정체는 뭐냐??
+        public List<string?> Input { get; } = new List<string?>();
         public uint MinInput { get; set; }
         public uint MaxInput { get; set; }
-
     }
 }

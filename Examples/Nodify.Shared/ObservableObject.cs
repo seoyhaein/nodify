@@ -20,7 +20,7 @@ namespace Nodify
                 }
             }
         }
-
+        // ref, in, out 을 좀더 정확히 파악해야함.
         public bool SetProperty<T>(ref T reference, T value, [CallerMemberName] in string propertyName = default!)
         {
             if (!Equals(reference, value))

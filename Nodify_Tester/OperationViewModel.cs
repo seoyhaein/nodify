@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using Nodify;
 
-namespace Nodify.Calculator
+namespace Nodify_Tester
 {
     public class OperationViewModel : ObservableObject
     {
         public OperationViewModel()
         {
-            Input.WhenAdded(x =>
+           /* Input.WhenAdded(x =>
             {
                 x.Operation = this;
                 x.IsInput = true;
@@ -17,26 +18,24 @@ namespace Nodify.Calculator
             .WhenRemoved(x =>
             {
                 x.PropertyChanged -= OnInputValueChanged;
-            });
+            });*/
         }
-        
-        private void OnInputValueChanged(object sender, PropertyChangedEventArgs e)
+
+        /*private void OnInputValueChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ConnectorViewModel.Value))
             {
                 OnInputValueChanged();
             }
-        }
+        }*/
 
-        // CreateOperationInfoViewModel 에서 받음
         private Point _location;
         public Point Location
         {
             get => _location;
             set => SetProperty(ref _location, value);
         }
-        
-        // OperationInfoViewModel 에서 받음.
+
         private string? _title;
         public string? Title
         {
@@ -51,18 +50,17 @@ namespace Nodify.Calculator
             set => SetProperty(ref _isSelected, value);
         }
 
-        // OperationInfoViewModel 에서 받음.
-        private IOperation? _operation;
+       /* private IOperation? _operation;
         public IOperation? Operation
         {
             get => _operation;
             set => SetProperty(ref _operation, value)
                 .Then(OnInputValueChanged);
-        }
+        }*/
 
-        public NodifyObservableCollection<ConnectorViewModel> Input { get; } = new NodifyObservableCollection<ConnectorViewModel>();
+       // public NodifyObservableCollection<ConnectorViewModel> Input { get; } = new NodifyObservableCollection<ConnectorViewModel>();
 
-        private ConnectorViewModel? _output;
+        /*private ConnectorViewModel? _output;
         public ConnectorViewModel? Output
         {
             get => _output;
@@ -73,9 +71,9 @@ namespace Nodify.Calculator
                     _output.Operation = this;
                 }
             }
-        }
+        }*/
 
-        protected virtual void OnInputValueChanged()
+       /* protected virtual void OnInputValueChanged()
         {
             if (Output != null && Operation != null)
             {
@@ -89,6 +87,6 @@ namespace Nodify.Calculator
 
                 }
             }
-        }
+        }*/
     }
 }

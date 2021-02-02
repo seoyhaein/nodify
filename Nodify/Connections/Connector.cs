@@ -11,8 +11,29 @@ namespace Nodify
     [TemplatePart(Name = ElementConnector, Type = typeof(FrameworkElement))]
     public class Connector : Control
     {
-        protected const string ElementConnector = "PART_Connector";
+        // NodeInput.xaml, NodeOutput.xaml 에서
+        // NodeInput.xaml
+        //
+        //                    <Control x:Name="PART_Connector"
+        //                             Focusable="False"
+        //                             Margin="0 0 5 0"
+        //                             VerticalAlignment="Center"
+        //                             Background="Transparent"
+        //                             BorderBrush="{TemplateBinding BorderBrush}"
+        //                             Template="{TemplateBinding ConnectorTemplate}" />
+        // NodeOutput.xaml
+        // 
+        //                    <Control x:Name="PART_Connector"
+        //                             Focusable="False"
+        //                             Margin="5 0 0 0"
+        //                             VerticalAlignment="Center"
+        //                             Background="Transparent"
+        //                             BorderBrush="{TemplateBinding BorderBrush}"
+        //                             Template="{TemplateBinding ConnectorTemplate}" />
+        // 이렇게 정의되어 있음
 
+        protected const string ElementConnector = "PART_Connector";
+       
         #region Routed Events
 
         public static readonly RoutedEvent PendingConnectionStartedEvent = EventManager.RegisterRoutedEvent(nameof(PendingConnectionStarted), RoutingStrategy.Bubble, typeof(PendingConnectionEventHandler), typeof(Connector));
@@ -127,6 +148,7 @@ namespace Nodify
         /// <summary>
         /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
         /// </summary>
+        /// C# 6.0 이상에서 private set; 즉 읽기전용 프로퍼티에서 private set 의 생략이 가능해진다.
         protected NodifyEditor? Editor { get; private set; }
 
         /// <summary>
@@ -155,14 +177,37 @@ namespace Nodify
 
         #endregion
 
+
+        /*
+            public class Connector : Control : FrameworkElement 이렇게 파생을 받았다.
+            FrameworkElement 파생 된 클래스는 OnApplyTemplate 클래스 처리기를 사용 하 여이 
+            메서드가 명시적으로 호출 된 사례 또는 레이아웃 시스템에 대 한 알림 메시지를 받을 수 있습니다. 
+            OnApplyTemplate 는 템플릿이 완전히 생성 되 고 논리 트리에 연결 된 후에 호출 됩니다. 
+        
+            약간 init() 느낌의 함수임.
+         */
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             Thumb = Template.FindName(ElementConnector, this) as FrameworkElement ?? this;
 
-            Container = this.GetParentOfType<ItemContainer>();
-            Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();
+            
+            
+            /*
+                 this.GetParentOfType 에서 this 는 NodeInput 이다. 이클래스는 Connector 인데 물론 NodeInput 은 Connector 로 상속을 받았다.
+                 왜 this 가 NodeInput 인지 찾아야 한다.
+                 사실 Node 가 생성 되는 시점도 아직 파악하고 있지 못하다. 이부분을 찾아야 한다.
+             */
+            Container = this.GetParentOfType<ItemContainer>();  // NodeInput 의 부모 ItemContainer 를 찾는다. 실제로 NodeInput, NodeOutput 은 Connector 에서 상속받았다.
+
+            if (Container?.Editor != null)
+                Editor = Container?.Editor;
+            else {
+               Editor = this.GetParentOfType<NodifyEditor>();
+            };
+
+            //Editor = Container?.Editor ?? this.GetParentOfType<NodifyEditor>();  
 
             Loaded += OnConnectorLoaded;
             Unloaded += OnConnectorUnloaded;
@@ -383,35 +428,55 @@ namespace Nodify
                 _thumbCenter = new Point(Thumb.ActualWidth / 2, Thumb.ActualHeight / 2);
             }
 
-            var args = new PendingConnectionEventArgs(DataContext)
+            var args = new PendingConnectionEventArgs(DataContext) // PendingConnectionEventArgs.SourceConnector 에 DataContext 를 연결 시킴.
             {
+                // Anchor 는 PendingConnectionEventArgs
+                // RoutedEvent, Source 는 RoutedEventArgs
+                // Source 이벤트를 발생시킨 개체에 대한 참조를 가져오거나 설정합니다.
+                // RoutedEvent 이 RoutedEventArgs 인스턴스와 연결된 RoutedEvent를 가져오거나 설정합니다.
+
                 RoutedEvent = PendingConnectionStartedEvent,
+                // Anchor 는 Connector 에서 받아온 Anchor 임. 근데 Anchor 는 뭐지???
                 Anchor = Anchor,
                 Source = this
             };
 
-            RaiseEvent(args);
+            RaiseEvent(args);   // 여기서 PendingConnectionStartedEvent 이 이벤트 발생시킴. RaiseEvent(RoutedEventArgs)
             IsPendingConnection = true;
         }
 
+        /*
+         * 이 함수에서 PendingConnectionCompletedEvent 에 대한 이벤트를 발생시켜 준다.
+         */
         protected virtual void OnConnectorDragCompleted(bool cancel = false)
         {
             FrameworkElement? elem = null;
             if (Editor != null)
             {
                 elem = PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor));
+
             }
 
             var target = elem?.DataContext;
 
-            var args = new PendingConnectionEventArgs(DataContext)
-            {
-                TargetConnector = target,
-                RoutedEvent = PendingConnectionCompletedEvent,
-                Anchor = Anchor,
-                Source = this,
-                Canceled = cancel
-            };
+            /*  var args = new PendingConnectionEventArgs(DataContext)
+              {
+                  TargetConnector = target,
+                  RoutedEvent = PendingConnectionCompletedEvent,
+                  Anchor = Anchor,
+                  Source = this,
+                  Canceled = cancel //  Gets or sets a value that indicates whether this <see cref="PendingConnection"/> was cancelled.
+              };*/
+
+            var args1 = new PendingConnectionEventArgs(DataContext);                    // 여기서 SourceConnector 세팅
+
+            PendingConnectionEventArgs args = args1 as PendingConnectionEventArgs;
+           
+            args.TargetConnector = target;                                              // 여기서 TargetConnector 세팅
+            args.RoutedEvent = PendingConnectionCompletedEvent;
+            args.Anchor = Anchor;
+            args.Source = this;
+            args.Canceled = cancel;
 
             IsPendingConnection = false;
             RaiseEvent(args);

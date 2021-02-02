@@ -44,13 +44,21 @@
                       Transform="{Binding AppliedTransform, ElementName=Editor}"
                       Drawing="{StaticResource LargeGridGeometry}" />
 
-        <local:ItemToListConverter x:Key="ItemToListConverter" />
+        <local:ItemToListConverter x:Key="ItemToListConverter" /> <!-- 이거 없애도록 처리할까? -->
     </Window.Resources>
-
-    <Grid>
+    <!--connector PendingConnectionCompletedEvent 
+    ConnectionCompletedCommand 의 경우 NodifyEditor의 constructor 에서 connector PendingConnectionCompletedEvent 에 대응되는 핸들러에 의해서 처리되도록 한다.
+    즉, ConnectionCompletedCommand 에 매핑되는 method 는 PendingConnectionCompletedEvent 에 대한 핸들러 이다.
+    
+    ItemsSource의 경우 context menu 로 부터 선택된 operation 에 대한 collection 이 매핑되어 있다.
+    -->
+    <!--
+    ConnectionCompletedCommand 분석 시작해야함 01/31
+    -->
+        <Grid>
         <nodify:NodifyEditor ItemsSource="{Binding Operations}"
                              Connections="{Binding Connections}"
-                             ConnectionCompletedCommand="{Binding CreateConnectionCommand}"
+                             ConnectionCompletedCommand="{Binding CreateConnectionCommand}" 
                              DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}"
                              Background="{StaticResource SmallGridLinesDrawingBrush}"
                              GridCellSize="15"
@@ -97,7 +105,7 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-
+                <!-- ItemsSource 에 들어간 녀석들이 여기서 랜더링 됨. -->
                 <DataTemplate DataType="{x:Type local:OperationViewModel}">
                     <nodify:Node Content="{Binding Title}"
                                  Input="{Binding Input}"
@@ -173,7 +181,7 @@
                                 <Setter Property="CommandParameter">
                                     <Setter.Value>
                                         <MultiBinding Converter="{local:OperationInfoConverter}">
-                                            <Binding />
+                                            <Binding /> <!-- AvailableOperations 바인딩 됨. -->
                                             <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"
                                                      Path="PlacementTarget.MouseLocation" />
                                         </MultiBinding>

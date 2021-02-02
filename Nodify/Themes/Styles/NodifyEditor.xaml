@@ -11,10 +11,10 @@
     <DataTemplate x:Key="PendingConnectionTemplate">
         <local:PendingConnection IsTabStop="False" />
     </DataTemplate>
-
+    <!--DodgerBlue -->
     <Style x:Key="SelectionRectangleStyle"
            TargetType="Rectangle">
-        <Setter Property="Stroke"
+        <Setter Property="Stroke" 
                 Value="DodgerBlue" />
         <Setter Property="StrokeThickness"
                 Value="1" />
@@ -25,7 +25,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <!--black #1E1E1E-->
     <Style TargetType="{x:Type local:NodifyEditor}">
         <Setter Property="ClipToBounds"
                 Value="True" />
@@ -35,6 +35,7 @@
                 Value="#1E1E1E" />
         <Setter Property="IsTabStop"
                 Value="False" />
+        <!--IsTabStop 컨트롤이 탭 탐색에 포함되면 true이고, 그렇지 않으면 false입니다. 기본값은 true입니다.-->
         <Setter Property="EnableRealtimeSelection"
                 Value="True" />
         <Setter Property="SelectionRectangleStyle"
@@ -49,6 +50,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
+                        <!--RenderTransform https://docs.microsoft.com/ko-kr/dotnet/desktop/wpf/graphics-multimedia/how-to-specify-the-origin-of-a-transform-by-using-relative-values?view=netframeworkdesktop-4.8-->
                         <Canvas RenderTransform="{TemplateBinding AppliedTransform}">
                             <ItemsControl ItemsSource="{TemplateBinding Connections}"
                                           ItemTemplate="{TemplateBinding ConnectionTemplate}"
@@ -59,7 +61,8 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
-
+                            <!-- isItemHost 이 Panel이 ItemsControl에서 생성한 UI(사용자 인터페이스) 항목에 대한 컨테이너인지 여부를 나타내는 값을 가져오거나 설정합니다.-->
+                            <!-- MultiSelector 에서 ItemsSource 가 있는데 여기에 대한 컨테이너를 말하는 것인가? 이건 코딩을 통해서 확인해야함.-->
                             <local:NodifyCanvas x:Name="PART_ItemsHost"
                                                 IsItemsHost="True" />
 

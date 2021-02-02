@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Nodify.Calculator
+namespace Nodify_Tester
 {
     public class OperationInfoConverter : MarkupExtension, IMultiValueConverter
     {
@@ -22,7 +22,7 @@ namespace Nodify.Calculator
         {
             throw new NotImplementedException();
         }
-        // https://riptutorial.com/wpf/example/22049/using-markupextension-with-converters-to-skip-recource-declaration
+
         public override object ProvideValue(IServiceProvider serviceProvider)
             => this;
     }
