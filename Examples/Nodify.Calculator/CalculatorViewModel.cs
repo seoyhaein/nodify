@@ -7,6 +7,7 @@ namespace Nodify.Calculator
     {
         public CalculatorViewModel()
         {
+            // CreateConnectionCommand 의 경우 바인딩이 되는 경우 두개의 함수를 delegate 하는 방식인가?
             CreateConnectionCommand = new DelegateCommand<(object Source, object Target)>(target => CreateConnection((ConnectorViewModel)target.Source, (ConnectorViewModel)target.Target), target => CanCreateConnection((ConnectorViewModel)target.Source, target.Target as ConnectorViewModel));
             CreateOperationCommand = new DelegateCommand<CreateOperationInfoViewModel>(CreateOperation); // 입력 파라미터가 CreateOperationInfoViewModel 인 대리함수 생성
             DisconnectConnectorCommand = new DelegateCommand<ConnectorViewModel>(DisconnectConnector);

@@ -255,7 +255,7 @@ namespace Nodify
         #endregion
 
         #region Readonly Dependency Properties
-        //scale 을 세팅해주면 여기서 변화한다. 컨스트럭터를 살펴볼것!
+        //scale 을 세팅해주면 여기서 변화한다. 컨스트럭터를 CreateConnectionCommand!
         protected internal static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(Transform), typeof(NodifyEditor), new FrameworkPropertyMetadata(new TransformGroup()));
         public static readonly DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
 
@@ -587,7 +587,10 @@ namespace Nodify
             SetValue(AppliedTransformPropertyKey, transform);
 
             OnDisableAutoPanningChanged(DisableAutoPanning);
+
+           
         }
+
         // 템플릿이 적용되면 호출되는 콜백함수??
         public override void OnApplyTemplate()
         {
@@ -1239,6 +1242,7 @@ namespace Nodify
 
         #region Helpers
 
+       
         /// <summary>
         /// Transforms the <paramref name="point"/> to a location relative to the <see cref="ItemsHost"/> panel.
         /// </summary>

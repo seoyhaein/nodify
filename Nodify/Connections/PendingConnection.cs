@@ -221,7 +221,10 @@ namespace Nodify
             {
                 Editor.AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnPendingConnectionStarted));
                 Editor.AddHandler(Connector.PendingConnectionDragEvent, new PendingConnectionEventHandler(OnPendingConnectionDrag));
+                // 공유 이벤트 처리 ture 로 입력됨.
                 Editor.AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnPendingConnectionCompleted), true);
+
+                
                 SetAllowOnlyConnectorsAttached(Editor, AllowOnlyConnectors);
             }
         }
@@ -246,6 +249,7 @@ namespace Nodify
                 if (Editor != null && (EnablePreview || EnableSnapping))
                 {
                     // Look for a potential connector
+                    // Editor.ItemsHost 는 NodifyCanvas
                     FrameworkElement? connector = Editor.ItemsHost != null ? GetPotentialConnector(Editor.ItemsHost, AllowOnlyConnectors) : GetPotentialConnector(Editor, AllowOnlyConnectors);
 
                     // Update the connector's anchor and snap to it if snapping is enabled
@@ -318,6 +322,8 @@ namespace Nodify
         /// <returns>The connector if found</returns>
         internal static FrameworkElement? GetPotentialConnector(FrameworkElement container, bool allowOnlyConnectors)
         {
+            // 마우스에 있는 녀석의 container 가 connector 타입인가를 테스트 하는 코드???
+            // 이건 디버깅 해서 확실히 알아보자
             FrameworkElement? connector = container.GetElementUnderMouse<Connector>();
 
             if (connector == null && !allowOnlyConnectors)

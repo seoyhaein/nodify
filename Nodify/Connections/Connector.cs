@@ -41,6 +41,8 @@ namespace Nodify
         public static readonly RoutedEvent PendingConnectionDragEvent = EventManager.RegisterRoutedEvent(nameof(PendingConnectionDrag), RoutingStrategy.Bubble, typeof(PendingConnectionEventHandler), typeof(Connector));
         public static readonly RoutedEvent DisconnectEvent = EventManager.RegisterRoutedEvent(nameof(Disconnect), RoutingStrategy.Bubble, typeof(ConnectorEventHandler), typeof(Connector));
 
+        
+        // 외부에서 event 처리함수를 등록시켜줄 수 있도록 만들어줌.
         /// <summary>
         /// Occurs when the <see cref="Connector"/> is clicked.
         /// </summary>
@@ -398,12 +400,13 @@ namespace Nodify
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            // Thumb 은 NodeInput, NodeOutput 에서 스택패널안에 들어가있는 동그란 버튼들이다.
             if (IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
             {
                 var offset = e.GetPosition(Thumb) - _thumbCenter;
                 OnConnectorDrag(offset);
 
-                e.Handled = true;
+                e.Handled = true;  // 이벤트 처리여부를 기록할 수 있다. 해당 이벤트가 처리가 되었으면 ture, 처리가 않되었으면 false 이다.
             }
         }
 
