@@ -15,6 +15,7 @@ namespace Nodify
         public static readonly DependencyProperty HeaderBrushProperty = DependencyProperty.Register(nameof(HeaderBrush), typeof(Brush), typeof(Node));
         public static readonly DependencyProperty FooterBrushProperty = DependencyProperty.Register(nameof(FooterBrush), typeof(Brush), typeof(Node));
         
+        //IconPropery 를 세팅해줌
         public static readonly DependencyProperty IconProperty = MenuItem.IconProperty.AddOwner(typeof(Node));
        
         public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(nameof(Footer), typeof(object), typeof(Node));
@@ -111,6 +112,7 @@ namespace Nodify
 
         static Node()
         {
+            // 이 구문 파악해야함.자동으로 생성되는 코드이긴 해도 파악해야함.
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Node), new FrameworkPropertyMetadata(typeof(Node)));
         }
     }

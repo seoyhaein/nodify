@@ -40,7 +40,7 @@
                 Value="{StaticResource DefaultInputConnectorTemplate}" />
         <Setter Property="OutputConnectorTemplate"
                 Value="{StaticResource DefaultOutputConnectorTemplate}" />
-        <Setter Property="Template">
+        <Setter Property="Template"> <!--Node 의 모양을 나타낸다.-->
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Node}">
                     <Border Background="{TemplateBinding Background}"
@@ -61,13 +61,15 @@
                                     Grid.ColumnSpan="3">
                                 <StackPanel Orientation="Horizontal"
                                             Margin="6 0 6 0">
-                                    <ContentPresenter ContentSource="Icon"
+                                    <!--추가적으로 어떻게 바인딩 되는지 살펴봐야한다.-->
+                                        <ContentPresenter ContentSource="Icon"
                                                       Width="16"
                                                       Margin="0 3 6 5"
                                                       Visibility="{TemplateBinding Icon, Converter={StaticResource NullToVisibilityConverter}}"
                                                       VerticalAlignment="Center"
                                                       HorizontalAlignment="Center" />
-
+                                    <!--추가적으로 어떻게 바인딩 되는지 살펴봐야한다.-->
+                                    <!--HeaderedContentControl Header 가 있으면  HasHeader ture, 없으면(null) false, 기본 false-->
                                     <ContentPresenter ContentSource="Header"
                                                       Margin="0 3 0 5"
                                                       Visibility="{TemplateBinding HasHeader, Converter={StaticResource BooleanToVisibilityConverter}}" />

@@ -471,6 +471,8 @@ namespace Nodify
                   Canceled = cancel //  Gets or sets a value that indicates whether this <see cref="PendingConnection"/> was cancelled.
               };*/
 
+            // Connector.DataContext 를 찾아야함.
+            // Calculator 의 경우 매핑되는 것은 ConnectorViewModel 임. 
             var args1 = new PendingConnectionEventArgs(DataContext);                    // 여기서 SourceConnector 세팅
 
             PendingConnectionEventArgs args = args1 as PendingConnectionEventArgs;
