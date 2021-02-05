@@ -2,15 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <ControlTemplate x:Key="ConnectorThumbTemplate"
-                     TargetType="Control">
+    <ControlTemplate x:Key="ConnectorThumbTemplate" TargetType="Control"> <!--TargetType ="Control" 을 주목하자. ??? -->
         <Ellipse Width="14"
                  Height="14"
                  Stroke="{TemplateBinding BorderBrush}"
                  Fill="{TemplateBinding Background}"
                  StrokeThickness="2" />
     </ControlTemplate>
-
+    <!--이런 리소스들은 한곳으로 정의하는게 낫지 않을까??? -->
     <LinearGradientBrush x:Key="FadeOpacityMask"
                          StartPoint="0 0"
                          EndPoint="1 0">
@@ -37,7 +36,8 @@
                 Value="0 0 16 0" />
         <Setter Property="ConnectorTemplate"
                 Value="{StaticResource ConnectorThumbTemplate}" />
-        <Setter Property="Template">
+        <!-- <Control x:Name="PART_Connector" 의 Template 에 바인딩 됨.-->
+        <Setter Property="Template"> <!--Template 에서(ControlTemplate) 모양을 구체화함.  -->
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NodeInput}">
                     <Grid Background="{TemplateBinding Background}">
@@ -56,16 +56,18 @@
                                      Background="Transparent"
                                      BorderBrush="{TemplateBinding BorderBrush}"
                                      Template="{TemplateBinding ConnectorTemplate}" />
+                            <!-- 사용자가 지정한 ConnectorTemplate 이 바인딩됨.-->
 
-                            <ContentPresenter ContentSource="Header" />
+                            <ContentPresenter ContentSource="Header" /> <!-- 별칭을 Header 로 잡았는데 추후 사용하나?? -->
                         </StackPanel>
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsConnected"
-                                 Value="True">
-                            <Setter TargetName="PART_Connector"
+                        <Trigger Property="IsConnected" Value="True">
+                            <!-- IsConnected 가 True 이면 발동하는 트리거!-->
+                                <Setter TargetName="PART_Connector"
                                     Property="Background"
                                     Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <!--TargetName 해당 Setter 가 적용되는 대상을 가리킴-->
                         </Trigger>
                         <Trigger Property="local:PendingConnection.IsOverElement"
                                  Value="True">
