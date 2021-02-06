@@ -557,7 +557,11 @@ namespace Nodify
         static NodifyEditor()
         {
             // https://docs.microsoft.com/ko-kr/dotnet/api/system.windows.frameworkelement.defaultstylekey?view=net-5.0
+            // DefaultStyleKeyProperty 에 기존 style 값을 넣는 것이 아니라 NodifyEditor의 기본값(Style) 을 넣는다.
+            // OverrideMetadata(FrameworkPropertyMetadata가 적용될 타입, new FrameworkPropertyMetadata(기본값의 타입 - 즉 해당 기본값의 메타데이터임)
+            // NodifyEditor 의 기본적인 메타데이터를 DefaultStyleKeyProperty에 적용시킨다. 만약 이 코드가 없으면 NodifyEditor 가 상속받았던 MultiSelector 의 기본 DefaultStyleKeyProperty 를 받게 된다.
             DefaultStyleKeyProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(typeof(NodifyEditor)));
+            // 요소가 포커스를 받을 수 있으면 true이고, 포커스를 받을 수 없으면 false입니다. 기본값은 false입니다.
             FocusableProperty.OverrideMetadata(typeof(NodifyEditor), new FrameworkPropertyMetadata(BoxValue.True));
 
             EditorCommands.Register(typeof(NodifyEditor));

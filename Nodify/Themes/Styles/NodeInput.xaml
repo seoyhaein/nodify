@@ -2,14 +2,14 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Nodify">
 
-    <ControlTemplate x:Key="ConnectorThumbTemplate" TargetType="Control"> <!--TargetType ="Control" 을 주목하자. ??? -->
+    <ControlTemplate x:Key="ConnectorThumbTemplate" TargetType="Control">
+        <!--TargetType ="Control" 을 주목하자. ??? -->
         <Ellipse Width="14"
                  Height="14"
                  Stroke="{TemplateBinding BorderBrush}"
                  Fill="{TemplateBinding Background}"
                  StrokeThickness="2" />
     </ControlTemplate>
-    <!--이런 리소스들은 한곳으로 정의하는게 낫지 않을까??? -->
     <LinearGradientBrush x:Key="FadeOpacityMask"
                          StartPoint="0 0"
                          EndPoint="1 0">
